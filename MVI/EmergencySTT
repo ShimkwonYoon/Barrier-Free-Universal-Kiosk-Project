@@ -1,0 +1,69 @@
+public class EmergencySTT extends CommonSTT {
+    private EmergencyFunction emergencyFunction;
+
+    public EmergencySTT(MainActivity mainActivity) {
+        super(mainActivity);
+        this.emergencyFunction = new EmergencyFunction(this.mainActivity);
+    }
+
+    public void insertEmergency(String str) {
+        String replace = str.replace(" ", BuildConfig.FLAVOR).replace("긴급호출설정", BuildConfig.FLAVOR);
+        if (replace.length() == 0) {
+            return;
+        }
+        if (Util.isPhoneNumber(replace)) {
+            this.emergencyFunction.setEmergencyNumber(replace);
+            MainActivity mainActivity = this.mainActivity;
+            mainActivity.speakOut(replace + " " + this.mainActivity.getString(R.string.msg_success_stt_add_emergency_number));
+            return;
+        }
+        for (PhoneBook phoneBook : this.contactFunction.getAllContacts()) {
+            if (phoneBook.getName().equals(replace)) {
+                if (!phoneBook.getTel().isEmpty()) {
+                    this.emergencyFunction.setEmergencyNumber(phoneBook.getTel());
+                    MainActivity mainActivity2 = this.mainActivity;
+                    mainActivity2.speakOut(replace + " " + this.mainActivity.getString(R.string.msg_success_stt_add_emergency_name));
+                    return;
+                }
+                MainActivity mainActivity3 = this.mainActivity;
+                mainActivity3.speakOut(replace + " " + R.string.msg_fail_stt_empty_number);
+                return;
+            }
+        }
+        MainActivity mainActivity4 = this.mainActivity;
+        mainActivity4.speakOut(replace + " " + this.mainActivity.getString(R.string.msg_fail_stt_find_emergency_name));
+    }
+
+    public void changeEmergency(String str) {
+        String replace = str.replace(" ", BuildConfig.FLAVOR).replace("긴급호출변경", BuildConfig.FLAVOR).replace("긴급호출수정", BuildConfig.FLAVOR).replace("긴급호출바꿔줘", BuildConfig.FLAVOR);
+        if (replace.length() == 0) {
+            return;
+        }
+        if (Util.isPhoneNumber(replace)) {
+            this.emergencyFunction.setEmergencyNumber(replace);
+            MainActivity mainActivity = this.mainActivity;
+            mainActivity.speakOut(replace + " " + this.mainActivity.getString(R.string.msg_success_stt_change_emergency_number));
+            return;
+        }
+        for (PhoneBook phoneBook : this.contactFunction.getAllContacts()) {
+            if (phoneBook.getName().equals(replace)) {
+                if (!phoneBook.getTel().isEmpty()) {
+                    this.emergencyFunction.setEmergencyNumber(phoneBook.getTel());
+                    MainActivity mainActivity2 = this.mainActivity;
+                    mainActivity2.speakOut(replace + " " + this.mainActivity.getString(R.string.msg_success_stt_change_emergency_name));
+                    return;
+                }
+                MainActivity mainActivity3 = this.mainActivity;
+                mainActivity3.speakOut(replace + " " + R.string.msg_fail_stt_empty_number);
+                return;
+            }
+        }
+        MainActivity mainActivity4 = this.mainActivity;
+        mainActivity4.speakOut(replace + " " + this.mainActivity.getString(R.string.msg_fail_stt_find_emergency_name));
+    }
+
+    public void deleteEmergency() {
+        this.emergencyFunction.deleteEmergencyNumber();
+        this.mainActivity.speakOut(this.mainActivity.getString(R.string.msg_success_stt_delete_emergency_number));
+    }
+}
